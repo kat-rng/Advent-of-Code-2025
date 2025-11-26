@@ -4,15 +4,15 @@ import System.IO
 -- Create a list of two integers from a string line
 lineToInts :: String -> [Integer]
 lineToInts line =
-    map readAsInt (words line)
-
--- Read the string as integers
-readAsInt :: String -> Integer
-readAsInt x = read x
+    map read (words line)
 
 -- Find total number of matches
-countMatches :: ([Integer], Integer) -> Integer
-countMatches (list, target) = length (filter (==target) list)
+countMatches :: [Integer] -> Integer -> Integer
+countMatches target param = toInteger $ length $ filter (==param) target
+
+-- Calculate the similarity score
+findSimilarity :: [Integer] -> Integer -> Integer
+findSimilarity target param = param * countMatches target param
 
 
 -- Compare two lists
@@ -27,4 +27,10 @@ main = do
     let l1 = head matrix
     let l2 = last matrix
 
-    putStr (show result)
+    -- Curry the target list
+    let similar = findSimilarity l2
+
+    -- Find the total similarity
+    let simScore = sum (map similar l1)
+
+    putStr (show simScore)
