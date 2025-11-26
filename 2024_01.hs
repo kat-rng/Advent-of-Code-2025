@@ -16,14 +16,14 @@ readAsInt x = read x
 
 -- Compare two lists
 main = do
-    --let l1 = [3,4,2,1,3,3]
-    --let l2 = [4,3,5,3,9,3]
-    --putStrLn (show (totalDiff l1 l2))
-
-    -- Test reading out the file
+    -- Reading from the file
     handle <- openFile "2024_01_input1" ReadMode
     contents <- hGetContents handle
     let x = lines contents
+
+    -- Find the integer list representation of each line
     let matrix = map lineToInts x
+
+    -- Take the differences of the transposed matrix
     let result = totalDiff (transpose matrix)
     putStr (show result)
