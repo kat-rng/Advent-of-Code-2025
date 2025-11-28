@@ -14,38 +14,24 @@ data ReactorDirection = Unknown
         | Decreasing
     deriving (Eq, Show)
 
--- Figure out if the reactor is increasing or decreasing
 getState :: Integer -> ReactorDirection
 getState change
     | change >  0 = Increasing
     | change <  0 = Decreasing
     | otherwise   = undefined
 
--- Check if the reactor is unsafe and engage in recursion
-checkState :: Integer -> ReactorDirection -> [Integer] -> Bool
-checkState stability direction differences
-    | stability == 0                                    = False
+checkState :: ReactorDirection -> [Integer] -> Bool
+checkState direction differences
     | length differences == 0                           = True
-    | isUnsafeDiff currentDiff                          = checkStateFailed
-    | direction == Unknown || direction == currentDir   = checkState stability currentDir (tail differences)
-    | direction /= currentDir                           = checkStateFailed
+    | isUnsafeDiff $ head differences                   = False
+    | direction == Unknown || direction == currentDir   = checkState currentDir (tail differences)
+    | direction /= currentDir                           = False
     | otherwise                                         = undefined
-    where 
-        currentDir          = getState $ head differences
-        currentDiff         = head differences
-        checkStateFailed    = checkState (stability-1) direction (ignoreLastDifference (tail differences) currentDiff)
+    where currentDir = getState $ head differences
 
-ignoreLastDifference :: [Integer] -> Integer -> [Integer]
-ignoreLastDifference differences lastdifference 
-    | length differences == 0 = differences
-    | length differences == 1 = [lastdifference +head differences]
-    | otherwise               = (lastdifference +head differences) : tail differences
-
--- Sets the reactor direction to unknown for the first iteration
 newCheckState :: [Integer] -> Bool
-newCheckState = checkState 2 Unknown
+newCheckState = checkState Unknown
 
--- Is the difference out of bounds?
 isUnsafeDiff :: Integer -> Bool
 isUnsafeDiff difference
     | difference >  3     = True
@@ -63,7 +49,5 @@ main = do
     let matrix      = map lineToInts x
     let diffmatrix  = map diffList matrix
     let safetys     = map newCheckState diffmatrix
-    let safetysbackwards     = map newCheckState $ map reverse diffmatrix
-    let allsafe = zipWith (||) safetys safetysbackwards
-    let totalSafe   = sum $ map fromEnum allsafe
+    let totalSafe   = sum $ map fromEnum safetys
     putStr $ show totalSafe
