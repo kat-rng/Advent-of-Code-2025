@@ -6,20 +6,19 @@ lineToInts :: String -> [Integer]
 lineToInts line =
     map read $ words line
 
-diffList :: [Integer] -> [Integer]
-diffList l = zipWith (-) (init l) (tail l)
-
 data ReactorDirection = Unknown
         | Increasing
         | Decreasing
     deriving (Eq, Show)
 
+-- Figure out if the reactor is increasing or decreasing
 getState :: Integer -> ReactorDirection
 getState change
     | change >  0 = Increasing
     | change <  0 = Decreasing
     | otherwise   = undefined
 
+-- Check if the reactor is unsafe and engage in recursion
 checkState :: ReactorDirection -> [Integer] -> Bool
 checkState direction differences
     | length differences == 0                           = True
@@ -29,9 +28,11 @@ checkState direction differences
     | otherwise                                         = undefined
     where currentDir = getState $ head differences
 
+-- Sets the reactor direction to unknown for the first iteration
 newCheckState :: [Integer] -> Bool
 newCheckState = checkState Unknown
 
+-- Is the difference out of bounds?
 isUnsafeDiff :: Integer -> Bool
 isUnsafeDiff difference
     | difference >  3     = True
