@@ -6,20 +6,24 @@ lineToInts :: String -> [Int]
 lineToInts line =
     map read $ words line
 
+--Find the differences between each state
 diffList :: [Int] -> [Int]
 diffList l = zipWith (-) (init l) (tail l)
 
+-- Defines what direction the reactor is traveling in
 data ReactorDirection = Unknown
         | Increasing
         | Decreasing
     deriving (Eq, Show)
 
+-- Check if the state is increasing or decreasing
 getState :: Int -> ReactorDirection
 getState change
     | change >  0 = Increasing
     | change <  0 = Decreasing
     | otherwise   = undefined
 
+-- Check if a state is safe
 checkState :: ReactorDirection -> [Int] -> Bool
 checkState direction differences
     | length differences == 0                           = True
@@ -29,26 +33,32 @@ checkState direction differences
     | otherwise                                         = undefined
     where currentDir = getState $ head differences
 
+-- Check if a list of differences is safe
 newCheckState :: [Int] -> Bool
 newCheckState = checkState Unknown
 
+-- See if any removal option makes it work
 checkAllRemovals :: [Int] -> Bool
-checkAllRemovals differences = or $ map newCheckState (newRemovalList differences)
+checkAllRemovals observations = or $ map newCheckState (map diffList (newRemovalList observations))
 
+-- Find all the removal options
 newRemovalList :: [Int] -> [[Int]]
-newRemovalList differences = removalList [] differences (length differences -1)
+newRemovalList observations = removalList [] observations (length observations -1)
 
+-- Create a list of every possible element removal
 removalList :: [[Int]] -> [Int] -> Int -> [[Int]]
-removalList perms differences index
+removalList perms observations index
     | index == -1                   = perms
-    | length perms == 0             = removalList [differences] differences index
-    | otherwise                     = removalList (deleteNth differences index:perms) differences (index-1)
+    | length perms == 0             = removalList [observations] observations index
+    | otherwise                     = removalList (deleteNth observations index:perms) observations (index-1)
 
+-- Remove the nth observation
 deleteNth :: [Int]-> Int -> [Int]
-deleteNth differences index =
-  let (before, after) = splitAt index  differences
+deleteNth observations index =
+  let (before, after) = splitAt index  observations
   in before ++ drop 1 after
 
+-- Check if the reactor difference is unsafe
 isUnsafeDiff :: Int -> Bool
 isUnsafeDiff difference
     | difference >  3     = True
@@ -64,7 +74,6 @@ main = do
 
     -- Find the integer list representation of each line
     let matrix      = map lineToInts x
-    let diffmatrix  = map diffList matrix
-    let safetys     = map checkAllRemovals diffmatrix
+    let safetys     = map checkAllRemovals matrix
     let totalSafe   = sum $ map fromEnum safetys
     putStr $ show totalSafe
