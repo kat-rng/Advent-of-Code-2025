@@ -21,4 +21,10 @@ main = do
 
     -- Find the integer list representation of each line
     let deltas = map lineToRotation x
-    putStr $ show matrix
+
+    -- Find the cumulative sum (starting from 50)
+    let cumsum = scanl1 (+) (50 : deltas)
+    let locs   = map (\x -> x `mod` 100) cumsum
+    let total0 = length $ filter (== 0) locs
+
+    putStr $ show total0
