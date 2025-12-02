@@ -13,7 +13,7 @@ strToDirection id = case id of
     'L' -> -1
     _   -> error "Bad direction ID"
 
-main = do
+pt1 = do
     -- Reading from the file
     handle <- openFile "2025_01_input" ReadMode
     contents <- hGetContents handle
