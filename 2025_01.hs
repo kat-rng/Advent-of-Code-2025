@@ -13,6 +13,7 @@ strToDirection id = case id of
     'L' -> -1
     _   -> error "Bad direction ID"
 
+-- Iterates through the dial and counts the times it hits 0
 zeroPasses :: Int -> Int -> Int -> Int
 zeroPasses acc target loc
     | target == 0  = acc
@@ -56,12 +57,8 @@ pt2 = do
 
     -- Find the cumulative sum (starting from 50)
     let cumsum = scanl1 (+) (50 : deltas)
-
-    -- Find the final location for each step on the dial
-    let locs = init $ map (\x -> x `mod` 100) cumsum
-
-    let zipNums = zip locs deltas
-    let totalRotations = sum $ zipWith newZeroPasses deltas locs
-    let rotationDat = zip zipNums (zipWith newZeroPasses deltas locs)
+    
+    -- Finding the number of times the dial passes 0
+    let totalRotations = sum $ zipWith newZeroPasses deltas cumsum
 
     putStr $ show totalRotations
