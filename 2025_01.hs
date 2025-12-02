@@ -32,3 +32,25 @@ pt1 = do
     let total0 = length $ filter (== 0) locs
 
     putStr $ show total0
+
+pt2 = do 
+    -- Reading from the file
+    handle <- openFile "2025_01_input" ReadMode
+    contents <- hGetContents handle
+    let x = lines contents
+
+    -- Find the integer list representation of each line
+    let deltas = map lineToRotation x
+
+    -- Find the cumulative sum (starting from 50)
+    let cumsum = scanl1 (+) (50 : deltas)
+
+    -- Find the final full rotation number for each step
+    let rotationLocs = map (\x -> x `div` 100) cumsum
+
+    -- Find the number of times said location is 0 
+    let rotations = zipWith (-) (init rotationLocs) (tail rotationLocs)
+
+    let totalRotations = sum $ map abs rotations
+
+    putStr $ show totalRotations
