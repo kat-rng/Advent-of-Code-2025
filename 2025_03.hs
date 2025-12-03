@@ -1,13 +1,24 @@
 import Data.List
 import System.IO
 
-maxJolt x = maximum $ sort x
+-- Kept for pt1 compatibility
+maxJolt x = maximum x
 
+-- Kept for pt1 compatibility
 findIdx :: Char -> String -> Int
 findIdx x xs = case i of 
     Just i -> i
     Nothing -> error "Jolt value missing" 
     where i = elemIndex x xs
+
+-- drops everything up to the first occurence of x
+dropIdx :: Char -> String -> String
+dropIdx x xs = case i of 
+    Just i -> drop (i+1) xs
+    Nothing -> error "Jolt value missing" 
+    where i = elemIndex x xs
+
+
 
 
 
@@ -26,3 +37,6 @@ pt1 = do
     let totalJoltage = sum joltage
 
     putStr $ show totalJoltage
+
+pt2 = do
+    Nothing
