@@ -51,18 +51,6 @@ totalReachable n a = case newReachable of
         newReachable  = A.sum isReachable
         reachableRemoved  = A.computeAs U $ A.zipWith (-) a isReachable
 
-totalReachableTest n a = case newReachable of
-    0 -> reachableRemoved
-    _ -> reachableRemoved
-    where 
-        isReachable = isAccesible a
-        newReachable  = A.sum isRealReachable
-        isRealReachable = A.zipWith (*) isReachable a
-        reachableRemoved  = A.computeAs U $ A.zipWith (-) a isRealReachable
-
-newTotalReachable :: Array U Ix2 Int -> Int
-newTotalReachable = totalReachable 0
-
 pt1 :: IO ()
 pt1 = do
     -- Reading from the file
