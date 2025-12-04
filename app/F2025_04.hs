@@ -40,6 +40,20 @@ isAccesible a = do
     let isAccess = A.map (\x -> fromEnum (x<4)) (A.computeAs U padA)
     A.computeAs U isAccess
 
+-- recursively count reachable paper rolls and remove them from the map 
+-- until no new reachable rolls are discovered
+totalReachable :: Int -> Array U Ix2 Int -> Int
+totalReachable n a = case nc of
+    0 -> n
+    _ -> totalReachable (n+nc) ac
+    where 
+        iac = isAccesible a
+        nc  = A.sum iac
+        ac  = A.computeAs U $ A.zipWith (-) a iac
+
+newTotalReachable :: Array U Ix2 Int -> Int
+newTotalReachable = totalReachable 0
+
 pt1 :: IO ()
 pt1 = do
     -- Reading from the file
@@ -49,9 +63,21 @@ pt1 = do
     -- Get the list contents
     let arr = inputToArray contents
 
-    --Find the total accessible paper rolls
+    --Find the total accessible paper rolls with NO removals
     let totalAcc =  A.sum $ A.zipWith (*) (isAccesible arr) arr 
     putStr $ show totalAcc
 
+pt2 :: IO ()
 pt2 = do
-    Nothing
+    -- Reading from the file
+    handle <- openFile "2025_04_input" ReadMode
+    contents <- hGetContents handle
+
+    -- Get the list contents
+    let arr = inputToArray contents
+
+    -- Find the total accesible paper rolls with removals
+    let totalAcc = newTotalReachable arr
+
+    putStr $ show totalAcc
+
