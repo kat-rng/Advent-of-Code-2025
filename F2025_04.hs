@@ -1,3 +1,5 @@
+module F2025_04 (pt1, pt2) where
+
 import Data.List
 import System.IO
 
@@ -6,6 +8,12 @@ charToInt c = case c of
     '.' -> 0
     '@' -> 1
     _   -> error "Invalid character"
+
+badFunction :: Char -> Int
+badFunction a = a
+
+-- Add this temporary function:
+checkLinter x = (head x)
 
 pt1 = do
     -- Reading from the file
