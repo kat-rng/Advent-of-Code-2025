@@ -43,13 +43,22 @@ isAccesible a = do
 -- recursively count reachable paper rolls and remove them from the map 
 -- until no new reachable rolls are discovered
 totalReachable :: Int -> Array U Ix2 Int -> Int
-totalReachable n a = case nc of
+totalReachable n a = case newReachable of
     0 -> n
-    _ -> totalReachable (n+nc) ac
+    _ -> totalReachable (n+newReachable) reachableRemoved
     where 
-        iac = isAccesible a
-        nc  = A.sum iac
-        ac  = A.computeAs U $ A.zipWith (-) a iac
+        isReachable = A.zipWith (*) a (isAccesible a)
+        newReachable  = A.sum isReachable
+        reachableRemoved  = A.computeAs U $ A.zipWith (-) a isReachable
+
+totalReachableTest n a = case newReachable of
+    0 -> reachableRemoved
+    _ -> reachableRemoved
+    where 
+        isReachable = isAccesible a
+        newReachable  = A.sum isRealReachable
+        isRealReachable = A.zipWith (*) isReachable a
+        reachableRemoved  = A.computeAs U $ A.zipWith (-) a isRealReachable
 
 newTotalReachable :: Array U Ix2 Int -> Int
 newTotalReachable = totalReachable 0
@@ -77,7 +86,7 @@ pt2 = do
     let arr = inputToArray contents
 
     -- Find the total accesible paper rolls with removals
-    let totalAcc = newTotalReachable arr
+    let totalAcc = totalReachable 0 arr
 
     putStr $ show totalAcc
 
