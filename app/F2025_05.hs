@@ -3,6 +3,7 @@ module F2025_05 (pt1, pt2) where
 import System.IO
 import Data.List.Split
 import Data.List
+import Text.ParserCombinators.ReadP (satisfy)
 
 -- Reads the ranges and ids 
 -- This assumes the blank line between them has been removed
@@ -24,6 +25,15 @@ readInput xs = do
 readRanges :: String -> [Int]
 readRanges xs = map read $ splitOn "-" xs
 
+-- Checks how many ranges the int falls within
+withinBounds :: [[Int]] -> Int -> Int
+withinBounds ranges target = do
+    let satisfiedUp  = map (<= target) upper
+    let satisfiedLow = map (>= target) lower
+    sum $ map fromEnum $ zipWith (&&) satisfiedUp satisfiedLow
+    where 
+        upper = head ranges
+        lower = last ranges
 
 pt1 :: IO ()
 pt1 = do
