@@ -79,6 +79,7 @@ mergeUntilAllChecked n ranges
 boundSize :: [Int] -> Int
 boundSize range = last range - head range + 1
 
+-- Find the total ids that would be classfied s fresh
 totalBounds :: [[Int]] -> Int
 totalBounds ranges = sum $ map boundSize $ mergeUntilAllChecked (length ranges) ranges
 
@@ -88,10 +89,10 @@ pt1 = do
     handle <- openFile "2025_05_input" ReadMode
     contents <- hGetContents handle
 
-    -- Get the list contents
+    -- Get the total fresh
     let totalFresh = sumWithinBounds $ readInput contents
 
-    --Find the total accessible paper rolls with NO removals
+    -- print it
     putStr $ show totalFresh
 
 pt2 :: IO ()
@@ -102,5 +103,7 @@ pt2 = do
 
     -- Get the list contents
     let (ranges, ids) = readInput contents
+
+    -- print the total bounds the id ranges label as fresh
     putStr $ show $ totalBounds ranges
 
