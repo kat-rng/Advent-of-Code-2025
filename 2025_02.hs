@@ -3,7 +3,7 @@ import Data.List
 import System.IO
 import Data.List.Split
 
--- Finds repetition in integers
+-- Finds repetition in integers using modulo and div to compare equivalent sections
 isRepeatedDiv :: Integer -> Integer -> Bool
 isRepeatedDiv n slices
     | size `mod` slices /= 0 = False
@@ -19,20 +19,24 @@ isRepeatedDiv n slices
         lower = n `mod` slicer
         mid   = lower `div` slicerMid
 
+-- Reads the string list as an integer list
 readDeep :: [String] -> [Integer]
 readDeep = map read
 
+-- Checks if there is repetition in the number by checking all slices
 allRepeatedDiv :: Integer -> Bool
 allRepeatedDiv n = any isRepeatedCurried [2..maxSize]
     where 
         maxSize = fromIntegral (1 + integerLog10 n)
         isRepeatedCurried = isRepeatedDiv n
 
+-- If there is repetition in the number, return it. Otherwise return nothing
 returnDiv :: Integer -> Integer
 returnDiv n
     | allRepeatedDiv n = n
     | otherwise       = 0
 
+-- Sum all the numbers that have repetition in the range
 seekAllInRange :: [Integer] -> Integer
 seekAllInRange xs = sum $ map returnDiv [(head xs) .. (last xs)]
 
