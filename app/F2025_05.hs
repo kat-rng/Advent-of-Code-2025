@@ -35,6 +35,18 @@ withinBounds ranges target = do
         upper = head ranges
         lower = last ranges
 
+-- Checks how many bounds are satisfied by each id
+allBounds :: ([[Int]], [Int]) -> [Int]
+allBounds (ranges, ids) = do
+    let boundCheck = withinBounds ranges
+    map boundCheck ids
+
+-- Counts the number of ids within bounds
+sumWithinBounds :: ([[Int]], [Int]) -> Int
+sumWithinBounds rangeIds = do
+    let boundedCounts = allBounds rangeIds
+    sum $ map (\x -> fromEnum (x>0)) boundedCounts
+
 pt1 :: IO ()
 pt1 = do
     -- Reading from the file
@@ -42,11 +54,10 @@ pt1 = do
     contents <- hGetContents handle
 
     -- Get the list contents
-    let (ranges, ids) = readInput contents
+    let totalFresh = sumWithinBounds $ readInput contents
 
     --Find the total accessible paper rolls with NO removals
-    putStr $ show ranges
-    putStr $ "\n\n" ++show ids
+    putStr $ show totalFresh
 
 pt2 :: IO ()
 pt2 = do
