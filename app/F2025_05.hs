@@ -64,24 +64,23 @@ maxExtent overlaps = do
 -- then appends the maximum extent of the overlaps
 mergeOverlaps :: ([[Int]], [Int]) -> [[Int]]
 mergeOverlaps (ranges, targetRange) = do
-    let (nonOverlap, overlap) = partition (boundWithinBound targetRange) ranges
+    let (overlap, nonOverlap) = partition (boundWithinBound targetRange) ranges
     nonOverlap ++ [maxExtent overlap]
 
 -- merge until the length of the bounds list doesn't change
-mergeUntilStable :: Int -> [[Int]] -> [[Int]]
-mergeUntilStable n ranges 
-    | n == boundLength  = ranges
-    | otherwise         = mergeUntilStable boundLength nextBounds
+mergeUntilAllChecked :: Int -> [[Int]] -> [[Int]]
+mergeUntilAllChecked n ranges 
+    | n == 0            = nextBounds
+    | otherwise         = mergeUntilAllChecked (n-1) nextBounds
     where 
         nextBounds  = mergeOverlaps (ranges, head ranges)
-        boundLength = length nextBounds
 
 -- finds the size of a range (inclusive)
 boundSize :: [Int] -> Int
 boundSize range = last range - head range + 1
 
 totalBounds :: [[Int]] -> Int
-totalBounds ranges = sum $ map boundSize $ mergeUntilStable 0 ranges
+totalBounds ranges = sum $ map boundSize $ mergeUntilAllChecked (length ranges) ranges
 
 pt1 :: IO ()
 pt1 = do
