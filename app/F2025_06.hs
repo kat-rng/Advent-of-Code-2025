@@ -55,7 +55,6 @@ pt2 = do
     contents <- hGetContents handle
 
     let input = map transposeStrings $ readTuples $ readInput contents
-    let output = sum $ map applyOperation input
+    let output = map applyOperation input
 
-    putStr $ show output
-
+    putStr $ show input
