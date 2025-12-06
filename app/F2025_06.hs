@@ -45,15 +45,15 @@ readInputFixedWidth s = do
     let splitUp = breakList xs
     let ns = transpose $ init splitUp
     let os = map (head . head . words) $ last splitUp
-    (transpose ns, os)
+    (ns, os)
 
 -- break the list at locations where there is whitespace
 -- formatted 1-(n-1) in the top level list is lists of numbers 
 --           n       in the top level list are the operations
 breakList :: [String] -> [[String]]
 breakList xs = do
-    let isBreak = trace (show xs) map (\x -> all (== head x) x) xs
-    let breaksX = trace (show isBreak) zipWith replaceWithXs xs isBreak
+    let isBreak = map (\x -> all (== head x) x) xs
+    let breaksX = zipWith replaceWithXs xs isBreak
     map (splitOn "X") $ transpose breaksX
 
 
@@ -87,6 +87,7 @@ pt2 = do
     handle <- openFile "2025_06_input" ReadMode
     contents <- hGetContents handle
 
-    let input = readInputFixedWidth contents
+    let input = map transposeStrings $ readTuples $ readInputFixedWidth contents
+    let output = sum $ map applyOperation input
 
-    putStr $ show input
+    putStr $ show output
