@@ -11,10 +11,11 @@ readInput s = do
     let os = map head $ last xs
     (transpose ns, os)
 
--- zip the lists into tuples of "math problems"
+-- zip the lists into tuples of "math problems" with string ints
 readTuples :: ([[String]], String) -> [([String], Char)]
 readTuples (ns, os) = zip ns os
 
+-- zip the lists into tuples of "math problems"
 readIntegers :: ([[String]], String) -> [([Integer], Char)]
 readIntegers (ns, os) = do
     let ns_int = map (map read) ns
