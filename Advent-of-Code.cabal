@@ -65,7 +65,8 @@ executable Advent-of-Code
     other-modules: 
         F2025_04,
         F2025_05,
-        F2025_06
+        F2025_06,
+        F2025_07
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
